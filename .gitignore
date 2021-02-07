@@ -1,0 +1,15 @@
+*/__pycache__
+.pytest_cache
+pinn.egg-info/
+venv/
+*.pyc
+*.swp
+*~
+_build/
+.ipynb_checkpoints/
+*.simg
+*.sif
+*.rule
+SNIC*
+ip_witelist.dat
+
