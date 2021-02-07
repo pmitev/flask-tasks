@@ -18,6 +18,7 @@ ip_ban.init_app(app)
 def run_task(taskid):
   T= time.strftime("%Y-%m-%dT%H:%M:%S")
   ip= request.remote_addr
+  print(request.user_agent)
 
   if taskid in TASKS.keys():
     print("OK")
