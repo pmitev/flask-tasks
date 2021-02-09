@@ -7,7 +7,7 @@
 python3 -m venv venv/flask_flask_openstack
 source venv/flask_openstack/bin/activate
 python3 -m pip install -U setuptools pip
-python3 -m pip install flask flask-ipban python-openstackclient
+python3 -m pip install flask flask-ipban python-openstackclient geoip2
 ```
 
 

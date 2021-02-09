@@ -12,12 +12,24 @@ ip_ban = IpBan()
 app = Flask(__name__)
 ip_ban.init_app(app)
 # ufw allow 6768/tcp
-
+GEOIP= ['local','SE']
 
 @app.route("/task/<taskid>", methods=["GET"])
 def run_task(taskid):
   T= time.strftime("%Y-%m-%dT%H:%M:%S")
   ip= request.remote_addr
+  
+  if GEOIP:
+    try:
+      ip_country= geoip.country(ip).country.iso_code
+    except:
+      ip_country= 'local'
+    print(">>> Country: "+ip_country)
+    if ip_country not in GEOIP:
+      abort(403)
+      
+
+
   print(request.user_agent)
 
   if taskid in TASKS.keys():
@@ -51,7 +63,7 @@ def run_task(taskid):
   else:
     print("Wrong")
     response= make_response('Wrong', 404)
-    abort(404)
+    abort(403)
 
   response.mimetype = "text/plain"
   return response
@@ -77,6 +89,12 @@ def favicon():
 if __name__ == '__main__':
 
   with open('flask-server-tasks.yaml','r') as f:     
-    TASKS=yaml.load(f, yaml.FullLoader)    
+    TASKS=yaml.load(f, yaml.FullLoader)
+
+  if GEOIP :
+    import geoip2.database
+    geoip= geoip2.database.Reader('GeoLite2-Country_20210202/GeoLite2-Country.mmdb')
+
+  
 
   app.run(host="0.0.0.0", port=5000, debug=True)
