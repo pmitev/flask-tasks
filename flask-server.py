@@ -12,22 +12,22 @@ ip_ban = IpBan()
 app = Flask(__name__)
 ip_ban.init_app(app)
 # ufw allow 6768/tcp
-GEOIP= ['local','SE']
+GEOIP= ['local','SE','FR']
 
 @app.route("/task/<taskid>", methods=["GET"])
 def run_task(taskid):
   T= time.strftime("%Y-%m-%dT%H:%M:%S")
   ip= request.remote_addr
+ 
+
+  try:
+    ip_country= geoip.country(ip).country.iso_code
+  except:
+    ip_country= 'local'
   
-  if GEOIP:
-    try:
-      ip_country= geoip.country(ip).country.iso_code
-    except:
-      ip_country= 'local'
-    print(">>> Country: "+ip_country)
-    if ip_country not in GEOIP:
-      abort(403)
-      
+  print(">>> Country: "+ip_country)
+  if GEOIP and ip_country not in GEOIP:
+      abort(403)      
 
 
   print(request.user_agent)
